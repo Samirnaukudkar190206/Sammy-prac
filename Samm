@@ -1,0 +1,149 @@
+3
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+import matplotlib.pyplot as plt
+
+# Load dataset
+df = pd.read_csv(r"C:\Users\STUDENT_024\Downloads\dataset.csv")
+
+# Replace categorical values with numbers
+df = df.replace({
+    "Lunch": 0,
+    "Dinner": 1,
+    "Yes": 1,
+    "No": 0,
+    "Short": 0,
+    "Long": 1
+})
+
+# Separate input and output
+X = df.drop("Will_Wait", axis=1)
+y = df["Will_Wait"]
+
+# Split dataset into training and testing data
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.3,
+    random_state=42
+)
+
+# Create Decision Tree model
+model = DecisionTreeClassifier()
+
+# Train the model
+model.fit(X_train, y_train)
+
+# Make predictions
+prediction = model.predict(X_test)
+
+# Display predictions
+print("Predicted Values:", prediction)
+
+# Display accuracy
+print("Accuracy:", model.score(X_test, y_test))
+
+# Plot Decision Tree
+plt.figure(figsize=(8, 6))
+
+plot_tree(
+    model,
+    feature_names=X.columns,
+    class_names=["No", "Yes"],
+    filled=True
+)
+
+plt.show()
+2(a)
+import heapq
+graph = {
+    'S': [('B', 4), ('C', 3)],
+    'B': [('F', 5), ('E', 12)],
+    'C': [('E', 10), ('D', 7)],
+    'D': [('E', 2)],
+    'E': [('G', 5)],
+    'F': [('G', 16)],
+    'G': []
+}
+heuristic = {
+    'S': 14,
+    'B': 12,
+    'C': 11,
+    'D': 6,
+    'E': 4,
+    'F': 11,
+    'G': 0
+}
+def a_star(start, goal):
+    open_list = []
+    heapq.heappush(open_list, (heuristic[start], start))
+    g_cost = {start: 0}
+    parent = {start: None}
+    visited = set()
+    while open_list:
+        f, current = heapq.heappop(open_list)
+        if current == goal:
+            break
+        if current in visited:
+            continue
+        visited.add(current)
+        for neighbor, cost in graph[current]:
+            new_g = g_cost[current] + cost
+            if neighbor not in g_cost or new_g < g_cost[neighbor]:
+                g_cost[neighbor] = new_g
+                f_cost = new_g + heuristic[neighbor]
+                heapq.heappush(open_list, (f_cost, neighbor))
+                parent[neighbor] = current
+    path = []
+    node = goal
+    while node is not None:
+        path.append(node)
+        node = parent[node]
+    path.reverse()
+    print("Optimal Path:", " -> ".join(path))
+    print("Total Cost:", g_cost[goal])
+a_star('S', 'G')
+1(b)
+graph = {
+    'A':['B','C'],
+    'B':['D','E'],
+    'C':['F','G'],
+    'D':['H'],
+    'E':[],
+    'F':[],
+    'G':[],
+    'H':[]
+    }
+def dls(node,depth):
+    if (depth<0):
+        return
+    print(node,end="")
+    if depth == 0:
+        return
+    for neighbour in graph[node]:
+        dls(neighbour,depth -1)
+def iddfs(start,max_depth):
+1(a)
+graph = {
+    'A':['B','C'],
+    'B':['D','E'],
+    'C':['F','G'],
+    'D':[],
+    'E':[],
+    'F':[],
+    'G':[]
+    }
+goal = 'G'
+queue = ['A']
+while queue:
+    node = queue.pop(0)
+    if node == goal:
+        print("Goal Found...",goal)
+        break
+    for child in graph[node]:
+        queue.append(child)
+    for depth in range(max_depth +1):
+        print("Depth limit:",depth)
+        dls(start,depth)
+iddfs('A',3)
